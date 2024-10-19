@@ -12,6 +12,8 @@ import {
 import { icons } from "../../constants";
 import Sidebar from "../../components/Sidebar";
 import Entypo from '@expo/vector-icons/Entypo';
+import {Ionicons} from "@expo/vector-icons";
+import TopBar from "../../components/TopBar";
 
 const ProfileScreen = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -57,26 +59,17 @@ const ProfileScreen = () => {
         <View style={styles.container}>
             <StatusBar backgroundColor="transparent" translucent barStyle="light-content" />
 
-            {/* Top Bar */}
-            <View style={styles.topBar}>
-                {/* Left-side Logo */}
-                <View style={styles.iconContainer}>
+            <TopBar
+                leftComponent={
                     <Image source={icons.BKLogo} style={styles.logo} resizeMode="contain" />
-                </View>
-
-                {/* Centered eHUST Logo */}
-                <View style={styles.iconContainer}>
-                    <Image source={icons.whiteLogo} style={styles.eHustLogo} resizeMode="contain" />
-                </View>
-
-                {/* Right-side Toggle Button */}
-                <View style={styles.iconContainer}>
+                }
+                centerComponent={<Image source={icons.whiteLogo} style={styles.eHustLogo} resizeMode="contain" />}
+                rightComponent={
                     <TouchableOpacity onPress={toggleSidebar} style={styles.iconButton}>
                         <Entypo name="dots-three-vertical" size={24} color="white" />
                     </TouchableOpacity>
-                </View>
-            </View>
-
+                }
+            />
             {/* Main Content */}
             <View style={styles.content}>
                 <View style={styles.header}>
@@ -108,16 +101,17 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     iconContainer: {
-        flex: 1, // Each container takes up equal space
-        justifyContent: 'center', // Center the content vertically
-        alignItems: 'center', // Center the content horizontally
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     logo: {
         width: 50,
         height: 50,
         overflow: 'hidden',
+
         marginRight: 30,
-        marginTop: 50,
+        marginTop: 40,
     },
     eHustLogo: {
         width: 70,
@@ -141,8 +135,8 @@ const styles = StyleSheet.create({
         left: 0,
         top: 0,
         bottom: 0,
-        width: 300,
-        backgroundColor: 'white',
+        width: '100%',
+        backgroundColor: '#b30000',
         padding: 16,
         zIndex: 5,
         elevation: 5,

@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         top: 0,
         bottom: 0,
         width: 300,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#b30000',
         padding: 20,
         zIndex: 2, // To make sure it appears over the profile content
     },
