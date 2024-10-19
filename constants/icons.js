@@ -4,4 +4,5 @@ import whiteLogo from '../assets/icons/hust_logo2.png';
 import greyLogo from '../assets/icons/hust_logo3.png';
 import eye from '../assets/icons/eye.png';
 import eyeHide from '../assets/icons/eye-hide.png';
-export default {profile, redLogo, whiteLogo, greyLogo, eye, eyeHide};
+import BKLogo from '../assets/icons/BK_logo.png';
+export default {profile, redLogo, whiteLogo, greyLogo, eye, eyeHide, BKLogo};

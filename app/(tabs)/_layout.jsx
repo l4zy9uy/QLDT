@@ -1,24 +1,19 @@
-import {GestureHandlerRootView} from "react-native-gesture-handler";
-import {Drawer} from "expo-router/drawer";
-import {Ionicons} from "@expo/vector-icons";
+import React from 'react';
+import {Tabs} from "expo-router";
+import Home from "./home";
+import SearchScreen from "./search";
+import ProfileScreen from "./profile";
+import {TabBar} from "../../components/TabBar";
 
 const DrawerLayout = () => {
     return (
-        <GestureHandlerRootView className="">
-            <Drawer>
-                <Drawer.Screen
-                    name='home'
-                    options={{
-                        drawerLabel: 'Home',
-                        headerTitle: 'Home',
-                        drawerIcon: ({size, color}) => (
-                            <Ionicons name='home-outline' size={size} color={color} />
-                        ),
-                    }}
-                />
-            </Drawer>
-        </GestureHandlerRootView>
-    )
+        <Tabs tabBar={props => <TabBar {...props} />}>
+            <Tabs.Screen name="home" options={{title: 'Home', headerShown: false}} />
+            <Tabs.Screen name="search" options={{title: 'Search', headerShown: false}} />
+            <Tabs.Screen name="profile" options={{title: 'Profile', headerShown: false}} />
+        </Tabs>
+    );
 }
+
 
 export default DrawerLayout;

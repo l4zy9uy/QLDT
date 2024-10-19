@@ -22,7 +22,7 @@ const RootLayout = () => {
 
         if (fontsLoaded) {
             SplashScreen.hideAsync();
-            router.push("/signIn")
+            //router.push("/signIn")
         }
     }, [fontsLoaded, error]);
 
@@ -43,8 +43,8 @@ const RootLayout = () => {
             {/*    <Stack.Screen name="(auth)" options={{ headerShown: false }} />*/}
             {/*</Stack>*/}
             <Stack>
-                {/*<Stack.Screen name="(tabs)" options={{ headerShown: false }} />*/}
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                {/*<Stack.Screen name="(auth)" options={{ headerShown: false }} />*/}
                 {/*<Stack.Screen name="index" options={{ headerShown: false }} />*/}
             </Stack>
         </GlobalProvider>
