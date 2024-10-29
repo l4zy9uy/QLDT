@@ -3,10 +3,10 @@ import React from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
 
 const TopBar = ({
-                    leftComponent,      // Custom element or icon for the left
-                    centerComponent,    // Custom element or icon for the center
-                    rightComponent,     // Custom element or icon for the right
-                    iconContainerStyle, // Custom styles for individual icon containers
+                    leftComponent,
+                    centerComponent,
+                    rightComponent,
+                    iconContainerStyle,
                 }) => {
     return (
         <View style={styles.topBar}>

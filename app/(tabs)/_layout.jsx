@@ -11,6 +11,11 @@ const DrawerLayout = () => {
             <Tabs.Screen name="home" options={{title: 'Home', headerShown: false}} />
             <Tabs.Screen name="search" options={{title: 'Search', headerShown: false}} />
             <Tabs.Screen name="profile" options={{title: 'Profile', headerShown: false}} />
+            <Tabs.Screen name="registerClass" options={{title: 'RegisterClass', headerShown: false}} />
+            <Tabs.Screen name="editClass" options={{title: 'EditClass', headerShown: false}} />
+            <Tabs.Screen name="survey" options={{title: 'SurveyClass', headerShown: false}} />
+            <Tabs.Screen name="assignments" options={{title: 'AssignmentsList', headerShown: false}} />
+            <Tabs.Screen name="assignmentDetail" options={{title: 'AssigmentDetail', headerShown: false}} />
         </Tabs>
     );
 }

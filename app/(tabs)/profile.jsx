@@ -8,20 +8,21 @@ import {
     TouchableOpacity,
     PanResponder,
     Image,
+    Dimensions,
 } from 'react-native';
-import { icons } from "../../constants";
-import Sidebar from "../../components/Sidebar";
+import { icons } from "../../constants"; // Your custom icons
+import Sidebar from "../../components/Sidebar"; // Refactored Sidebar
 import Entypo from '@expo/vector-icons/Entypo';
-import {Ionicons} from "@expo/vector-icons";
-import TopBar from "../../components/TopBar";
+import TopBar from "../../components/TopBar"; // Custom TopBar
 
 const ProfileScreen = () => {
-    const [isVisible, setIsVisible] = useState(false);
-    const slideAnim = useRef(new Animated.Value(-300)).current; // Sidebar hidden initially
+    const SCREEN_WIDTH = Dimensions.get('window').width;
+    const [isVisible, setIsVisible] = useState(false); // Sidebar visibility state
+    const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current; // Start off-screen (right)
 
     const toggleSidebar = () => {
         Animated.timing(slideAnim, {
-            toValue: isVisible ? -300 : 0, // Animate to hidden or visible position
+            toValue: isVisible ? SCREEN_WIDTH : 0, // Slide in or out
             duration: 300,
             useNativeDriver: true,
         }).start();
@@ -30,21 +31,29 @@ const ProfileScreen = () => {
 
     const panResponder = useRef(
         PanResponder.create({
+            // Only detect swiping right to close
             onMoveShouldSetPanResponder: (evt, gestureState) =>
-                Math.abs(gestureState.dx) > 20,
+                gestureState.dx > 20 && Math.abs(gestureState.dy) < 10,
+
+            // Handle sidebar drag when swiping right
             onPanResponderMove: (evt, gestureState) => {
-                if (gestureState.dx < 0) {
-                    slideAnim.setValue(gestureState.dx);
+                if (gestureState.dx > 0) {
+                    // Move sidebar according to swipe distance (right swipe)
+                    slideAnim.setValue(Math.min(gestureState.dx, SCREEN_WIDTH));
                 }
             },
+
+            // Handle swipe release
             onPanResponderRelease: (evt, gestureState) => {
-                if (gestureState.dx < -100) {
+                if (gestureState.dx > 100) {
+                    // Close sidebar if swiped right far enough
                     Animated.timing(slideAnim, {
-                        toValue: -300,
+                        toValue: SCREEN_WIDTH,
                         duration: 300,
                         useNativeDriver: true,
                     }).start(() => setIsVisible(false));
                 } else {
+                    // Keep sidebar open if swipe was not far enough
                     Animated.timing(slideAnim, {
                         toValue: 0,
                         duration: 300,
@@ -63,27 +72,30 @@ const ProfileScreen = () => {
                 leftComponent={
                     <Image source={icons.BKLogo} style={styles.logo} resizeMode="contain" />
                 }
-                centerComponent={<Image source={icons.whiteLogo} style={styles.eHustLogo} resizeMode="contain" />}
+                centerComponent={
+                    <Image source={icons.whiteLogo} style={styles.eHustLogo} resizeMode="contain" />
+                }
                 rightComponent={
                     <TouchableOpacity onPress={toggleSidebar} style={styles.iconButton}>
                         <Entypo name="dots-three-vertical" size={24} color="white" />
                     </TouchableOpacity>
                 }
             />
+
             {/* Main Content */}
             <View style={styles.content}>
                 <View style={styles.header}>
                     <Text style={styles.text}>Profile Screen</Text>
                 </View>
-
-                <Animated.View
-                    style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}
-                    {...panResponder.panHandlers}
-                >
-                    <Text style={styles.sidebarText}>Sidebar Content</Text>
-                    <Sidebar toggleSidebar={toggleSidebar} isVisible={isVisible} slideAnim={slideAnim} />
-                </Animated.View>
             </View>
+
+            {/* Animated Sidebar */}
+            <Sidebar
+                slideAnim={slideAnim}
+                panResponder={panResponder}
+                isVisible={isVisible}
+                toggleSidebar={toggleSidebar}
+            />
         </View>
     );
 };
@@ -108,8 +120,6 @@ const styles = StyleSheet.create({
     logo: {
         width: 50,
         height: 50,
-        overflow: 'hidden',
-
         marginRight: 30,
         marginTop: 40,
     },
@@ -132,10 +142,10 @@ const styles = StyleSheet.create({
     },
     sidebar: {
         position: 'absolute',
-        left: 0,
+        right: 0, // Align the sidebar to the right
         top: 0,
         bottom: 0,
-        width: '100%',
+        width: 300,
         backgroundColor: '#b30000',
         padding: 16,
         zIndex: 5,
@@ -146,8 +156,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     iconButton: {
-        marginLeft: '60%'
-    }
+        marginLeft: '60%',
+    },
 });
 
 export default ProfileScreen;
