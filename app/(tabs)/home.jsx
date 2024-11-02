@@ -1,5 +1,5 @@
 // HomeScreen.js
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     View,
     StyleSheet,
@@ -11,10 +11,11 @@ import {
     Dimensions,
 } from 'react-native';
 import SquareButton from '../../components/SquareButton';
-import { MaterialIcons } from '@expo/vector-icons';
+import {MaterialCommunityIcons, MaterialIcons} from '@expo/vector-icons';
 import TopBar from '../../components/TopBar';
 import { icons } from '../../constants';
 import Entypo from '@expo/vector-icons/Entypo';
+import {Asset as Font} from "expo-asset";
 
 const numColumns = 2; // Number of buttons per row
 
@@ -123,7 +124,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f0f0',
     },
     flatListContainer: {
-        padding: 10,
     },
     logo: {
         width: 50,

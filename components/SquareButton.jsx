@@ -9,29 +9,36 @@ const SquareButton
             <TouchableOpacity style={styles.button} onPress={onPress}>
                 <View style={styles.iconContainer}>{icon}</View>
             </TouchableOpacity>
-            {/*<Text style={styles.title}>{title}</Text>
-            <Text style={styles.subtitle}>{subtitle}</Text>*/}
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.subtitle}>{subtitle}</Text>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     box: {
-        display: 'flex',
-        justifyContent: 'center',
+        flex: 1,
+        aspectRatio: 0.9,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        paddingVertical: 10,
+        // this is for debug box layout
+        // backgroundColor: 'rgba(0, 255, 0, 0.3)', // Light green background
+        // borderColor: 'red', // Red border for visibility
+        // borderWidth: 2,
     },
     button: {
         width: '50%',
         aspectRatio: 1,
         backgroundColor: '#fff',
-        borderRadius: 15,
+        borderRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowOffset: { width: 0, height: 5 },
         elevation: 5,
-        marginVertical: 10,
+        marginVertical: 5,
     },
     iconContainer: {
         marginBottom: 10,
@@ -45,6 +52,7 @@ const styles = StyleSheet.create({
         color: 'gray',
         textAlign: 'center',
         marginTop: 5,
+        fontSize: 10
     },
 });
 
