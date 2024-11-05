@@ -1,32 +1,34 @@
-import {useState} from "react";
-import {Link, router} from "expo-router";
-import {SafeAreaView} from "react-native-safe-area-context";
+import { useState } from "react";
+import { Link, router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
     View,
     Text,
     ScrollView,
-    Dimensions,
     Alert,
     Image,
-    StyleSheet
+    StyleSheet,
+    TouchableOpacity,
 } from "react-native";
-
-import {images, icons} from "../../constants";
-import {CustomButton, FormField} from "../../components";
-import {getCurrentUser, signIn} from "../../libs/appwrite";
-import {useGlobalContext} from "../../context/GlobalProvider";
+import { icons } from "../../constants";
+import { CustomButton, FormField } from "../../components";
+import { getCurrentUser, signIn } from "../../libs/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import Checkbox from "expo-checkbox";
 
 const SignIn = () => {
-    const {setUser, setIsLogged} = useGlobalContext();
+    const { setUser, setIsLogged } = useGlobalContext();
     const [isSubmitting, setSubmitting] = useState(false);
     const [form, setForm] = useState({
         email: "",
         password: "",
     });
+    const [rememberMe, setRememberMe] = useState(false);
 
     const submit = async () => {
         if (form.email === "" || form.password === "") {
             Alert.alert("Error", "Please fill in all fields");
+            return;
         }
 
         setSubmitting(true);
@@ -38,7 +40,7 @@ const SignIn = () => {
             setIsLogged(true);
 
             Alert.alert("Success", "User signed in successfully");
-            router.replace("/signUp");
+            router.replace("/home");
         } catch (error) {
             Alert.alert("Error", error.message);
         } finally {
@@ -46,61 +48,71 @@ const SignIn = () => {
         }
     };
 
-    console.log("Auth signIn");
     return (
-        <SafeAreaView className="bg-red-lip h-full">
-            <ScrollView contentContainerStyle={{paddingBottom: 150}}>
-                <View className="w-full flex justify-center h-full px-4 my-6">
-                    <View className="flex items-center self-center w-64 h-20">
-                        <View className="absolute w-4 h-4 rounded-full scale-x-[12] bg-black opacity-5 bottom-[-2px] "/>
+        <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+                <View style={styles.innerContainer}>
+                    {/* Logo */}
+                    <View style={styles.logoContainer}>
                         <Image
-                            source={icons.whiteLogo}
+                            source={icons.redLogo}
                             resizeMode="center"
-                            className="w-[185px] h-[80px] self-center"
+                            style={styles.logo}
                         />
                     </View>
 
-                    <Text
-                        className="text-2xl font-semibold text-white mt-10 font-psemibold">
-                        Log in to eHUST
-                    </Text>
+                    {/* Welcome Text */}
+                    <Text style={styles.welcomeText}>Welcome back</Text>
+                    <Text style={styles.subText}>Continue to sign in!</Text>
 
+                    {/* Email Input */}
                     <FormField
-                        title="Email"
+                        title="EMAIL"
                         value={form.email}
-                        placeholder="Email"
-                        handleChangeText={(e) => setForm({...form, email: e})}
-                        otherStyles="mt-7"
+                        placeholder="Enter your email"
+                        placeholderTextColor="#888888"
+                        handleChangeText={(e) => setForm({ ...form, email: e })}
                         keyboardType="email-address"
                     />
-
                     <FormField
-                        title="Password"
+                        title="PASSWORD"
                         value={form.password}
-                        placeholder="Password"
-                        handleChangeText={(e) => setForm({
-                            ...form,
-                            password: e
-                        })}
-                        otherStyles="mt-7"
+                        placeholder="Enter your password"
+                        placeholderTextColor="#888888"
+                        handleChangeText={(e) => setForm({ ...form, password: e })}
+                        secureTextEntry={true}
                     />
 
+
+                    {/* Forgot Password Link */}
+                    <TouchableOpacity>
+                        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                    </TouchableOpacity>
+
+                    {/* Remember Me Checkbox */}
+                    <View style={styles.rememberMeContainer}>
+                        <Checkbox
+                            value={rememberMe}
+                            onValueChange={setRememberMe}
+                            color={rememberMe ? "#c62828" : undefined}
+                        />
+                        <Text style={styles.rememberMeText}>Remember me and keep me logged in</Text>
+                    </View>
+
+                    {/* Sign In Button */}
                     <CustomButton
                         title="Sign In"
                         handlePress={submit}
-                        containerStyles="mt-7"
+                        containerStyle={styles.signInButton} // Applying styles to make button visible
+                        textStyle={styles.signInButtonText} // Title style for button text color
                         isLoading={isSubmitting}
                     />
 
-                    <View className="flex justify-center pt-1 flex-row gap-2">
-                        <Text className="text-lg text-gray-100 font-pregular">
-                            Don't have an accounaaat?
-                        </Text>
-                        <Link
-                            href="/signUp"
-                            className="text-lg font-arialBlack text-secondary"
-                        >
-                            Signup
+                    {/* Sign Up Link */}
+                    <View style={styles.signUpContainer}>
+                        <Text style={styles.signUpPrompt}>Don't have an Account?</Text>
+                        <Link href="/signUp" style={styles.signUpLink}>
+                            Sign Up
                         </Link>
                     </View>
                 </View>
@@ -109,5 +121,99 @@ const SignIn = () => {
     );
 };
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#FFFFFF", // Set background to white
+    },
+    innerContainer: {
+        width: "90%",
+        alignSelf: "center",
+        marginTop: 20,
+    },
+    logoContainer: {
+        alignItems: "center",
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    logo: {
+        width: 180,
+        height: 80,
+    },
+    welcomeText: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "#c62828", // Red color for welcome text
+        textAlign: "center",
+        marginTop: 20,
+    },
+    subText: {
+        fontSize: 16,
+        color: "#000000", // Black color for subtitle
+        textAlign: "center",
+        marginBottom: 20,
+    },
+    formField: {
+        marginTop: 15,
+    },
+    input: {
+        backgroundColor: "#FFFFFF", // Pure white background for high contrast
+        borderColor: "#888888", // Darker grey border for more contrast
+        borderWidth: 1.5,
+        paddingHorizontal: 12,
+        paddingVertical: 12,
+        borderRadius: 8,
+        fontSize: 16,
+        color: "#000000", // Black text color
+        shadowColor: "#000", // Shadow for slight elevation
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    forgotPasswordText: {
+        color: "#c62828", // Red color for "Forgot Password?"
+        fontSize: 14,
+        textAlign: "right",
+        marginTop: 8,
+        marginBottom: 10,
+    },
+    rememberMeContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    rememberMeText: {
+        fontSize: 14,
+        color: "#000000", // Black color for "Remember me" text
+        marginLeft: 8,
+    },
+    signInButton: {
+        backgroundColor: "#c62828", // Red background for sign-in button
+        paddingVertical: 15,
+        borderRadius: 8,
+        alignItems: "center", // Center text in button
+    },
+    signInButtonText: {
+        color: "#FFFFFF", // White color for button text
+        fontWeight: "bold",
+        fontSize: 16,
+    },
+    signUpContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 20,
+    },
+    signUpPrompt: {
+        fontSize: 14,
+        color: "#000000", // Black color for "Don't have an account?"
+    },
+    signUpLink: {
+        fontSize: 14,
+        color: "#c62828", // Red color for Sign Up link
+        fontWeight: "bold",
+        marginLeft: 5,
+    },
+});
 
 export default SignIn;

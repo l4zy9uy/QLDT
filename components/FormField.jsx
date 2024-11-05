@@ -1,52 +1,84 @@
-import {useState} from "react";
+import { useState } from "react";
 import {
     View,
     Text,
     TextInput,
     TouchableOpacity,
     Image,
-    Pressable
+    StyleSheet,
 } from "react-native";
 
-import {icons} from "../constants";
+import { icons } from "../constants";
 
 const FormField = ({
                        title,
                        value,
                        placeholder,
                        handleChangeText,
-                       otherStyles,
+                       otherStyles = {},
                        ...props
                    }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <View className={`space-y-2 ${otherStyles}`}>
-            <View
-                className="w-full h-16 px-4 bg-transparent rounded-2xl border-2 border-white focus:border-orange-900 flex flex-row items-center">
+        <View style={[styles.container, otherStyles]}>
+            {title && <Text style={styles.label}>{title}</Text>}
+            <View style={styles.inputContainer}>
                 <TextInput
-                    className="flex-1 text-white font-arialBlack text-base"
+                    style={styles.input}
                     value={value}
                     placeholder={placeholder}
-                    placeholderTextColor="white"
+                    placeholderTextColor="#BBBBBB" // Light grey for better visibility
                     onChangeText={handleChangeText}
-                    secureTextEntry={title === "Password" && !showPassword}
-                    //blurOnSubmit={false}
+                    secureTextEntry={title === "PASSWORD" && !showPassword}
                     {...props}
                 />
-
-                {title === "Password" && (
-                    <Pressable onPress={() => setShowPassword(!showPassword)}>
+                {title === "PASSWORD" && (
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                         <Image
                             source={!showPassword ? icons.eye : icons.eyeHide}
-                            className="w-6 h-6"
+                            style={styles.icon}
                             resizeMode="contain"
                         />
-                    </Pressable>
+                    </TouchableOpacity>
                 )}
             </View>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        marginVertical: 10,
+    },
+    label: {
+        fontSize: 14,
+        color: "#c62828", // Red for label
+        fontWeight: "600",
+        marginBottom: 5,
+        paddingHorizontal: 24,
+    },
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        height: 60,
+        paddingHorizontal: 10,
+        backgroundColor: "#FFFFFF", // White background for contrast
+        borderRadius: 32,
+        borderColor: "#BBBBBB", // Light grey border
+        borderWidth: 1.5,
+    },
+    input: {
+        flex: 1,
+        fontSize: 12,
+        color: "#000000", // Black text color for readability
+        paddingHorizontal: 12,
+    },
+    icon: {
+        width: 24,
+        height: 24,
+        tintColor: "#888888", // Grey color for the icon
+    },
+});
 
 export default FormField;
