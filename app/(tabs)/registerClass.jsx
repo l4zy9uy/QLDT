@@ -4,7 +4,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert 
 import TopBar from '../../components/TopBar';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
-import CustomTable from '../../components/CustomTable'; // Import ClassTable component
+import CustomTable from '../../components/CustomTable';
+import {useNavigation} from "expo-router"; // Import ClassTable component
 
 const RegisterForClassScreen = () => {
     const [classCode, setClassCode] = useState('');
@@ -95,6 +96,7 @@ const RegisterForClassScreen = () => {
     const toggleSelection = (id) => {
         setSelectedClasses(prevState => ({ ...prevState, [id]: !prevState[id] }));
     };
+    const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
@@ -102,6 +104,7 @@ const RegisterForClassScreen = () => {
                 leftComponent={<Ionicons name="arrow-back-outline" size={24} color="white" />}
                 centerComponent={<Text style={styles.headerText}>REGISTER FOR CLASS</Text>}
                 rightComponent={<View />}
+                onLeftPress={() => navigation.goBack()}
             />
 
             <ScrollView contentContainerStyle={styles.formContainer}>

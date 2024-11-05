@@ -14,8 +14,7 @@ import SquareButton from '../../components/SquareButton';
 import {MaterialCommunityIcons, MaterialIcons} from '@expo/vector-icons';
 import TopBar from '../../components/TopBar';
 import { icons } from '../../constants';
-import Entypo from '@expo/vector-icons/Entypo';
-import {Asset as Font} from "expo-asset";
+import {router} from "expo-router";
 
 const numColumns = 2; // Number of buttons per row
 
@@ -25,6 +24,7 @@ const data = [
         title: 'Dang ki lop hoc',
         subtitle: 'Dang ky lop cho hoc ky tiep theo',
         icon: <MaterialIcons name="schedule" size={40} color="#c62828" />,
+        route: 'registerClass',
     },
     {
         key: '2',
@@ -93,7 +93,7 @@ const HomeScreen = () => {
                 icon={item.icon}
                 title={item.title}
                 subtitle={item.subtitle}
-                onPress={() => {}}
+                onPress={() => router.push(item.route)}
             />
         );
     };
