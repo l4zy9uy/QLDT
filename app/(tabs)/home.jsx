@@ -22,8 +22,8 @@ const numColumns = 2; // Number of buttons per row
 const data = [
     {
         key: '1',
-        title: 'Thời khóa biểu',
-        subtitle: 'Tra cứu thời khóa biểu, lịch thi',
+        title: 'Dang ki lop hoc',
+        subtitle: 'Dang ky lop cho hoc ky tiep theo',
         icon: <MaterialIcons name="schedule" size={40} color="#c62828" />,
     },
     {
