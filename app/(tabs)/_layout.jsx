@@ -37,6 +37,7 @@ const DrawerLayout = () => {
                 <Tabs.Screen name="assignments" options={{title: 'AssignmentsList', headerShown: false}} />
                 <Tabs.Screen name="assignmentDetail" options={{title: 'AssigmentDetail', headerShown: false}} />
                 <Tabs.Screen name="attendance" options={{title: 'AttendanceDetail', headerShown: false}} />
+                <Tabs.Screen name="notification" options={{title: 'Notification', headerShown: false}} />
             </Tabs>
         );
     }
