@@ -1,8 +1,8 @@
 // TabBar.js
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
-export function TabBar({ state, descriptors, navigation }) {
+export function TabBar({state, descriptors, navigation}) {
     // Filter the routes you want to display in the TabBar
     const visibleRoutes = state.routes.filter((route) =>
         ['home', 'search', 'profile'].includes(route.name) // Show only these tabs
@@ -11,7 +11,7 @@ export function TabBar({ state, descriptors, navigation }) {
     return (
         <View style={styles.tabBar}>
             {visibleRoutes.map((route, index) => {
-                const { options } = descriptors[route.key];
+                const {options} = descriptors[route.key];
                 const label =
                     options.tabBarLabel !== undefined
                         ? options.tabBarLabel
@@ -44,14 +44,14 @@ export function TabBar({ state, descriptors, navigation }) {
                     <TouchableOpacity
                         key={route.name}
                         accessibilityRole="button"
-                        accessibilityState={isFocused ? { selected: true } : {}}
+                        accessibilityState={isFocused ? {selected: true} : {}}
                         accessibilityLabel={options.tabBarAccessibilityLabel}
                         testID={options.tabBarTestID}
                         onPress={onPress}
                         onLongPress={onLongPress}
                         style={styles.tabItem}
                     >
-                        <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
+                        <Text style={{color: isFocused ? '#673ab7' : '#222'}}>
                             {label}
                         </Text>
                     </TouchableOpacity>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     View,
     Text,
@@ -8,9 +8,9 @@ import {
     Switch,
     TouchableOpacity,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 
-const Sidebar = ({ slideAnim, panResponder, isVisible, toggleSidebar }) => {
+const Sidebar = ({slideAnim, panResponder, isVisible, toggleSidebar}) => {
     const [isSwitchEnabled, setIsSwitchEnabled] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null); // Track radio button selection
 
@@ -20,23 +20,23 @@ const Sidebar = ({ slideAnim, panResponder, isVisible, toggleSidebar }) => {
 
     return (
         <Animated.View
-            style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}
+            style={[styles.sidebar, {transform: [{translateX: slideAnim}]}]}
             {...panResponder.panHandlers}
         >
             {/* Sidebar Header */}
             <View style={styles.header}>
-                <Ionicons name="logo-react" size={70} color="white" />
+                <Ionicons name="logo-react" size={70} color="white"/>
             </View>
 
             {/* Notification Switch */}
             <View style={styles.menuItem}>
-                <Ionicons name="notifications-outline" size={24} color="white" />
+                <Ionicons name="notifications-outline" size={24} color="white"/>
                 <Text style={styles.menuText}>Thông báo</Text>
                 <Switch
                     value={isSwitchEnabled}
                     onValueChange={toggleSwitch}
                     thumbColor={isSwitchEnabled ? "#fff" : "#f4f3f4"}
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    trackColor={{false: "#767577", true: "#81b0ff"}}
                 />
             </View>
 
@@ -75,25 +75,26 @@ const Sidebar = ({ slideAnim, panResponder, isVisible, toggleSidebar }) => {
 
             {/* Dropdown-like Timing Text */}
             <View style={styles.menuItem}>
-                <Ionicons name="time-outline" size={24} color="white" />
+                <Ionicons name="time-outline" size={24} color="white"/>
                 <Text style={styles.menuText}>Thông báo lịch học trước</Text>
                 <Text style={styles.dropdown}>15 phút</Text>
             </View>
 
             {/* FaceID/TouchID Option */}
             <TouchableOpacity style={styles.menuItem}>
-                <MaterialCommunityIcons name="fingerprint" size={24} color="white" />
+                <MaterialCommunityIcons name="fingerprint" size={24}
+                                        color="white"/>
                 <Text style={styles.menuText}>Cài đặt TouchID/FaceID</Text>
             </TouchableOpacity>
 
             {/* Logout Option */}
             <TouchableOpacity style={styles.menuItem}>
-                <Ionicons name="log-out-outline" size={24} color="white" />
+                <Ionicons name="log-out-outline" size={24} color="white"/>
                 <Text style={styles.menuText}>Đăng xuất</Text>
             </TouchableOpacity>
 
             {/* Close Button */}
-            <Button title="Close Sidebar" onPress={toggleSidebar} />
+            <Button title="Close Sidebar" onPress={toggleSidebar}/>
 
             {/* Footer */}
             <View style={styles.footer}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+import {View, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 const TopBar = ({
@@ -12,6 +12,8 @@ const TopBar = ({
                     rightFlex = 1,
                     onLeftPress, // Add a prop for handling left component press
                 }) => {
+
+
     const isArrowIcon = React.isValidElement(leftComponent) &&
         leftComponent.type === AntDesign &&
         leftComponent.props.name === 'arrowleft';
@@ -19,7 +21,7 @@ const TopBar = ({
     return (
         <View style={styles.topBar}>
             {/* Left Component */}
-            <View style={[styles.iconContainer, { flex: leftFlex }]}>
+            <View style={[styles.iconContainer, {flex: leftFlex}]}>
                 {isArrowIcon ? (
                     <TouchableOpacity onPress={onLeftPress}>
                         {leftComponent}
@@ -30,12 +32,14 @@ const TopBar = ({
             </View>
 
             {/* Center Component */}
-            <View style={[styles.iconContainer, iconContainerStyle, { flex: centerFlex }]}>
+            <View
+                style={[styles.iconContainer, iconContainerStyle, {flex: centerFlex}]}>
                 {centerComponent}
             </View>
 
             {/* Right Component */}
-            <View style={[styles.iconContainer, iconContainerStyle, { flex: rightFlex }]}>
+            <View
+                style={[styles.iconContainer, iconContainerStyle, {flex: rightFlex}]}>
                 {rightComponent}
             </View>
         </View>

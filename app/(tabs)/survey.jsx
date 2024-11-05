@@ -1,5 +1,5 @@
 // CreateOrEditSurveyScreen.js
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     View,
     Text,
@@ -9,7 +9,7 @@ import {
     ScrollView,
     Alert,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; // For dropdown options
+import {Picker} from '@react-native-picker/picker'; // For dropdown options
 import DateTimePicker from '@react-native-community/datetimepicker'; // For date/time selection
 import * as DocumentPicker from 'expo-document-picker'; // For file upload
 import TopBar from '../../components/TopBar'; // Your reusable TopBar component
@@ -59,7 +59,8 @@ const CreateOrEditSurveyScreen = () => {
                         <Text style={styles.headerText}>Back</Text>
                     </TouchableOpacity>
                 }
-                centerComponent={<Text style={styles.headerText}>CREATE SURVEY</Text>}
+                centerComponent={<Text style={styles.headerText}>CREATE
+                    SURVEY</Text>}
             />
 
             <ScrollView contentContainerStyle={styles.formContainer}>
@@ -85,7 +86,8 @@ const CreateOrEditSurveyScreen = () => {
                     onPress={() => setShowStartPicker(true)}
                     style={styles.datePickerButton}
                 >
-                    <Text style={styles.dateText}>Bắt đầu: {startDate.toLocaleDateString()}</Text>
+                    <Text style={styles.dateText}>Bắt
+                        đầu: {startDate.toLocaleDateString()}</Text>
                 </TouchableOpacity>
                 {showStartPicker && (
                     <DateTimePicker
@@ -104,7 +106,8 @@ const CreateOrEditSurveyScreen = () => {
                     onPress={() => setShowEndPicker(true)}
                     style={styles.datePickerButton}
                 >
-                    <Text style={styles.dateText}>Kết thúc: {endDate.toLocaleDateString()}</Text>
+                    <Text style={styles.dateText}>Kết
+                        thúc: {endDate.toLocaleDateString()}</Text>
                 </TouchableOpacity>
                 {showEndPicker && (
                     <DateTimePicker
@@ -119,14 +122,16 @@ const CreateOrEditSurveyScreen = () => {
                 )}
 
                 {/* File Upload Button */}
-                <TouchableOpacity style={styles.uploadButton} onPress={handleFileUpload}>
+                <TouchableOpacity style={styles.uploadButton}
+                                  onPress={handleFileUpload}>
                     <Text style={styles.uploadButtonText}>
                         {uploadedFile ? uploadedFile.name : 'Upload File'}
                     </Text>
                 </TouchableOpacity>
 
                 {/* Submit Button */}
-                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                <TouchableOpacity style={styles.submitButton}
+                                  onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Tạo bài kiểm tra</Text>
                 </TouchableOpacity>
             </ScrollView>

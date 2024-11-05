@@ -1,9 +1,9 @@
 // SquareButton.jsx
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
 
 const SquareButton
- = ({ icon, title, subtitle, onPress }) => {
+    = ({icon, title, subtitle, onPress}) => {
     return (
         <View style={styles.box}>
             <TouchableOpacity style={styles.button} onPress={onPress}>
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 5 },
+        shadowOffset: {width: 0, height: 5},
         elevation: 5,
         marginVertical: 5,
     },
