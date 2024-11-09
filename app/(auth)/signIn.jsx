@@ -15,6 +15,7 @@ import { CustomButton, FormField } from "../../components";
 import { getCurrentUser, signIn } from "../../libs/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import Checkbox from "expo-checkbox";
+import ForgotPassWord from "./forgotPassword";
 
 const SignIn = () => {
     const { setUser, setIsLogged } = useGlobalContext();
@@ -47,6 +48,11 @@ const SignIn = () => {
             setSubmitting(false);
         }
     };
+
+    const [isForgotPasswordVisible, setForgotPasswordVisible] = useState(false);
+
+    const openForgotPasswordPopup = () => setForgotPasswordVisible(true);
+    const closeForgotPasswordPopup = () => setForgotPasswordVisible(false);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -85,8 +91,12 @@ const SignIn = () => {
 
 
                     {/* Forgot Password Link */}
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={openForgotPasswordPopup}>
                         <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                        <ForgotPassWord
+                        visible={isForgotPasswordVisible}
+                        onClose={closeForgotPasswordPopup}
+                        />
                     </TouchableOpacity>
 
                     {/* Remember Me Checkbox */}

@@ -5,4 +5,5 @@ import greyLogo from '../assets/icons/hust_logo3.png';
 import eye from '../assets/icons/eye.png';
 import eyeHide from '../assets/icons/eye-hide.png';
 import BKLogo from '../assets/icons/BK_logo.png';
-export default {profile, redLogo, whiteLogo, greyLogo, eye, eyeHide, BKLogo};
+import forgotPassIcon from '../assets/icons/forgot-pass-icon-human.jpg';
+export default {profile, redLogo, whiteLogo, greyLogo, eye, eyeHide, BKLogo, forgotPassIcon};
