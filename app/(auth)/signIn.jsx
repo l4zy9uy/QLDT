@@ -19,8 +19,8 @@ import { icons } from "../../constants";
 import ForgotPassWord from "./forgotPassword";
 
 const SignIn = () => {
-    const { fontScale } = useWindowDimensions();
-    const styles = makeStyles(fontScale);
+    const { fontScale, width, height } = useGlobalContext();
+    const styles = makeStyles(fontScale, width, height);
     const { setUser, setIsLogged } = useGlobalContext();
     const [isSubmitting, setSubmitting] = useState(false);
     const [form, setForm] = useState({
@@ -133,7 +133,7 @@ const SignIn = () => {
     );
 };
 
-const makeStyles = (fontScale) =>
+const makeStyles = (fontScale, width, height) =>
     StyleSheet.create({
         container: {
             flex: 1,
@@ -142,15 +142,14 @@ const makeStyles = (fontScale) =>
         innerContainer: {
             width: "90%",
             alignSelf: "center",
-            marginTop: 20,
+            marginTop: width * 0.05,
         },
         logoContainer: {
             alignItems: "center",
-            marginVertical: 20,
         },
         logo: {
-            width: 120,
-            height: 120,
+            width: width * 0.618,
+            height: height * 0.2,
         },
         welcomeText: {
             fontSize: 24 / fontScale,

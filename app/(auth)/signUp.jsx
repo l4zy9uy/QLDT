@@ -1,26 +1,45 @@
-import {useState} from "react";
-import {Link, router} from "expo-router";
-import {SafeAreaView} from "react-native-safe-area-context";
-import {View, Text, ScrollView, Dimensions, Alert, Image} from "react-native";
-import {Dropdown} from "react-native-element-dropdown";
-import {icons, images} from "../../constants";
-import {createUser} from "../../libs/appwrite";
-import {CustomButton, FormField} from "../../components";
-import {useGlobalContext} from "../../context/GlobalProvider";
-import Onboarding from "../../components/Onboarding";
-const SignUp = () => {
-    const {setUser, setIsLogged} = useGlobalContext();
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import {
+    View,
+    Text,
+    ScrollView,
+    Alert,
+    Image,
+    StyleSheet,
+    useWindowDimensions,
+} from "react-native";
+import { Link, router } from "expo-router";
+import { Dropdown } from "react-native-element-dropdown";
+import { CustomButton, FormField } from "../../components";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { createUser } from "../../libs/appwrite";
+import { icons } from "../../constants";
+import DropdownField from "../../components/DropdownField";
 
+const SignUp = () => {
+    const { fontScale, width, height } = useWindowDimensions();
+    const styles = makeStyles(fontScale, width, height);
+    const { setUser, setIsLogged } = useGlobalContext();
     const [isSubmitting, setSubmitting] = useState(false);
     const [form, setForm] = useState({
         username: "",
         email: "",
         password: "",
+        confirmPassword: "", // New field for confirm password
     });
+    const [role, setRole] = useState(null);
 
     const submit = async () => {
-        if (form.username === "" || form.email === "" || form.password === "") {
+        // Validation: Ensure all fields are filled and passwords match
+        if (!form.username || !form.email || !form.password || !form.confirmPassword || !role) {
             Alert.alert("Error", "Please fill in all fields");
+            return;
+        }
+
+        if (form.password !== form.confirmPassword) {
+            Alert.alert("Error", "Passwords do not match");
+            return;
         }
 
         setSubmitting(true);
@@ -28,7 +47,6 @@ const SignUp = () => {
             const result = await createUser(form.email, form.password, form.username);
             setUser(result);
             setIsLogged(true);
-
             router.replace("/home");
         } catch (error) {
             Alert.alert("Error", error.message);
@@ -37,113 +55,102 @@ const SignUp = () => {
         }
     };
 
-    const data = [
-        {label: "Student", value: "STUDENT"},
-        {label: "Lecturer", value: "LECTURER"},
-    ]
-    const [value, setValue] = useState(null);
+    const roleOptions = [
+        { label: "Student", value: "STUDENT" },
+        { label: "Lecturer", value: "LECTURER" },
+    ];
 
-    console.log("Auth signUp");
     return (
-        <SafeAreaView className="bg-red-lip h-full">
-            <ScrollView contentContainerStyle={{paddingBottom: 150}}
-            keyboardShouldPersistTaps="always">
-                <View
-                    className="w-full flex justify-center h-full px-4 my-6"
-
-                >
-                    <View className="flex items-center self-center w-64 h-20">
-                        <View
-                            className="absolute w-4 h-4 rounded-full scale-x-[12] bg-black opacity-5 bottom-[-2px] "/>
+        <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+                <View style={styles.innerContainer}>
+                    {/* Logo */}
+                    <View style={styles.logoContainer}>
                         <Image
-                            source={icons.whiteLogo}
-                            resizeMode="center"
-                            className="w-[185px] h-[80px] self-center"
+                            source={icons.redLogo} // Replace with your logo
+                            resizeMode="contain"
+                            style={styles.logo}
                         />
                     </View>
 
-                    <Text
-                        className="text-2xl font-semibold text-white mt-10 font-psemibold">
-                        Sign Up to eHUST
-                    </Text>
+                    {/* Welcome Text */}
+                    <Text style={styles.welcomeText}>Sign Up to eHUST</Text>
+                    <Text style={styles.subText}>Create your account</Text>
 
-                    <View className="flex-row justify-between">
+                    <View style={styles.nameContainer}>
                         <FormField
                             title="Ho"
-                            value={form.username}
-                            placeholder="Ho"
-                            handleChangeText={(e) => setForm({
-                                ...form,
-                                username: e
-                            })}
-                            otherStyles="mt-7 w-1/4 flex-[1] mr-2"
+                            value={form.ho}
+                            placeholder="Enter your last name"
+                            placeholderTextColor="#888888"
+                            handleChangeText={(e) => setForm({ ...form, ho: e })}
+                            otherStyles={styles.hoField}
                         />
-
                         <FormField
                             title="Ten"
-                            value={form.username}
-                            placeholder="Ten"
-                            handleChangeText={(e) => setForm({
-                                ...form,
-                                username: e
-                            })}
-                            otherStyles="mt-7 flex-[1]"
+                            value={form.ten}
+                            placeholder="Enter your first name"
+                            placeholderTextColor="#888888"
+                            handleChangeText={(e) => setForm({ ...form, ten: e })}
+                            otherStyles={styles.tenField}
                         />
                     </View>
 
+                    {/* Email */}
                     <FormField
                         title="Email"
                         value={form.email}
-                        placeholder="Email"
-                        handleChangeText={(e) => setForm({...form, email: e})}
-                        otherStyles="mt-2"
+                        placeholder="Enter your email"
+                        placeholderTextColor="#888888"
+                        handleChangeText={(e) => setForm({ ...form, email: e })}
                         keyboardType="email-address"
+                        otherStyles={styles.formField}
                     />
 
+                    {/* Password */}
                     <FormField
                         title="Password"
                         value={form.password}
-                        placeholder="Password"
-                        handleChangeText={(e) => setForm({
-                            ...form,
-                            password: e
-                        })}
-                        otherStyles="mt-2"
+                        placeholder="Enter your password"
+                        placeholderTextColor="#888888"
+                        handleChangeText={(e) => setForm({ ...form, password: e })}
+                        secureTextEntry={true}
+                        otherStyles={styles.formField}
                     />
 
-
-                    <Dropdown data={data}
-                              labelField="label"
-                              valueField="value"
-                              value={value}
-                              onChange={item => {
-                                  setValue(item.value);
-                              }}
-                              placeholder="Role"
-                              placeholderStyle={{color: "white"}}
-                              iconColor="white"
-                              activeColor="white"
-                              selectedTextStyle={{color: "white"}}
-                              className="mt-2 w-full h-16 px-4 bg-transparent rounded-2xl border-2 border-white focus:border-secondary flex flex-row items-center"
+                    {/* Confirm Password */}
+                    <FormField
+                        title="Confirm Password"
+                        value={form.confirmPassword}
+                        placeholder="Re-enter your password"
+                        placeholderTextColor="#888888"
+                        handleChangeText={(e) => setForm({ ...form, confirmPassword: e })}
+                        secureTextEntry={true}
+                        otherStyles={styles.formField}
                     />
 
+                    {/* Role Dropdown */}
+                    <DropdownField
+                        title="Role"
+                        value={role}
+                        data={roleOptions}
+                        onChange={(item) => setRole(item.value)}
+                        placeholder="Select Role"
+                    />
 
+                    {/* Sign Up Button */}
                     <CustomButton
                         title="Sign Up"
                         handlePress={submit}
-                        containerStyles="mt-7 mx-auto w-1/2 h-20"
-                        textStyles="text-red-lip"
+                        containerStyle={styles.signUpButton}
+                        textStyle={styles.signUpButtonText}
                         isLoading={isSubmitting}
                     />
 
-                    <View className="flex justify-center pt-5 flex-row gap-2 mx-auto">
-                        <Text className="text-lg text-gray-100 sm:font-sm">
-                            Have an account already?
-                        </Text>
-                        <Link
-                            href="/signIn"
-                            className="text-lg font-psemibold text-secondary"
-                        >
+                    {/* Login Link */}
+                    <View style={styles.loginLinkContainer}>
+                        <Text style={styles.loginPrompt}>Have an account already?</Text>
+                        <Link href="/signIn" style={styles.loginLink}>
                             Login
                         </Link>
                     </View>
@@ -152,5 +159,98 @@ const SignUp = () => {
         </SafeAreaView>
     );
 };
+
+const makeStyles = (fontScale, width, height) =>
+    StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: "#FFFFFF", // White background
+        },
+        innerContainer: {
+            width: "90%",
+            alignSelf: "center",
+            marginTop: width * 0.05,
+        },
+        logoContainer: {
+            alignItems: "center",
+        },
+        logo: {
+            width: width * 0.618, // Responsive logo width (50% of screen width)
+            height: height * 0.2, // Adjusted height (30% of screen width)
+        },
+        welcomeText: {
+            fontSize: 24 / fontScale,
+            fontWeight: "600",
+            color: "#c62828", // Red color
+            textAlign: "center",
+            marginBottom: 5,
+        },
+        subText: {
+            fontSize: 16 / fontScale,
+            color: "#000000", // Neutral text color
+            textAlign: "center",
+            marginBottom: 20,
+        },
+        formField: {
+        },
+        dropdown: {
+            height: height * 0.06,
+            paddingHorizontal: width * 0.03,
+            backgroundColor: "#FFFFFF", // White background for contrast
+            borderRadius: 100,
+            borderColor: "#BBBBBB", // Light grey border
+            borderWidth: 1.5,
+        },
+        dropdownPlaceholder: {
+            fontSize: 12 / fontScale,
+            color: "#888888", // Black text color for readability
+            paddingHorizontal: width * 0.03,
+        },
+        dropdownText: {
+            color: "#000000", // Black selected text
+            fontSize: 14 / fontScale,
+        },
+        signUpButton: {
+            backgroundColor: "#c62828", // Red background
+            paddingVertical: 15,
+            borderRadius: 8,
+            alignItems: "center",
+            marginTop: 20,
+        },
+        signUpButtonText: {
+            color: "#FFFFFF", // White text
+            fontWeight: "bold",
+            fontSize: 16 / fontScale,
+        },
+        loginLinkContainer: {
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 20,
+        },
+        loginPrompt: {
+            fontSize: 14 / fontScale,
+            color: "#333333", // Neutral color
+        },
+        loginLink: {
+            fontSize: 14 / fontScale,
+            color: "#c62828", // Red link
+            fontWeight: "bold",
+            marginLeft: 5,
+        },
+
+        nameContainer: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+        },
+        hoField: {
+            flex: 1,
+            marginRight: 5, // Add spacing between fields
+        },
+        tenField: {
+            flex: 1,
+            marginLeft: 5,
+        },
+    });
 
 export default SignUp;

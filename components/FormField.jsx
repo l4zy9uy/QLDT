@@ -20,8 +20,8 @@ const FormField = ({
                        ...props
                    }) => {
     const [showPassword, setShowPassword] = useState(false);
-    const { fontScale } = useGlobalContext();
-    const styles = makeStyles(fontScale);
+    const { fontScale, width, height } = useGlobalContext();
+    const styles = makeStyles(fontScale, width, height);
 
     console.log(showPassword)
     return (
@@ -51,7 +51,7 @@ const FormField = ({
     );
 };
 
-const makeStyles = (fontScale) =>
+const makeStyles = (fontScale, width, height) =>
     StyleSheet.create({
         container: {
             marginVertical: 10,
@@ -61,15 +61,15 @@ const makeStyles = (fontScale) =>
             color: "#c62828", // Red for label
             fontWeight: "600",
             marginBottom: 5,
-            paddingHorizontal: 24,
+            paddingHorizontal: width * 0.03*2,
         },
         inputContainer: {
             flexDirection: "row",
             alignItems: "center",
-            height: 60,
-            paddingHorizontal: 10,
+            height: height * 0.06,
+            paddingHorizontal: width * 0.03,
             backgroundColor: "#FFFFFF", // White background for contrast
-            borderRadius: 32,
+            borderRadius: 100,
             borderColor: "#BBBBBB", // Light grey border
             borderWidth: 1.5,
         },
@@ -77,7 +77,7 @@ const makeStyles = (fontScale) =>
             flex: 1,
             fontSize: 12 / fontScale,
             color: "#000000", // Black text color for readability
-            paddingHorizontal: 12,
+            paddingHorizontal: width * 0.03,
         },
         icon: {
             width: 34,
