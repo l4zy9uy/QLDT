@@ -7,7 +7,7 @@ import {
     Image,
     StyleSheet,
 } from "react-native";
-
+import { useGlobalContext } from "../context/GlobalProvider";
 import { icons } from "../constants";
 
 const FormField = ({
@@ -16,10 +16,14 @@ const FormField = ({
                        placeholder,
                        handleChangeText,
                        otherStyles = {},
+                       secureTextEntry = false, // Pass this if it's a password field
                        ...props
                    }) => {
     const [showPassword, setShowPassword] = useState(false);
+    const { fontScale } = useGlobalContext();
+    const styles = makeStyles(fontScale);
 
+    console.log(showPassword)
     return (
         <View style={[styles.container, otherStyles]}>
             {title && <Text style={styles.label}>{title}</Text>}
@@ -28,15 +32,15 @@ const FormField = ({
                     style={styles.input}
                     value={value}
                     placeholder={placeholder}
-                    placeholderTextColor="#BBBBBB" // Light grey for better visibility
+                    placeholderTextColor="#888888"
                     onChangeText={handleChangeText}
-                    secureTextEntry={title === "PASSWORD" && !showPassword}
+                    secureTextEntry={secureTextEntry && !showPassword} // Toggle based on showPassword state
                     {...props}
                 />
-                {title === "PASSWORD" && (
+                {title === "Password" && (
                     <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                         <Image
-                            source={!showPassword ? icons.eye : icons.eyeHide}
+                            source={showPassword ? icons.eyeHide : icons.eye} // Toggle icon
                             style={styles.icon}
                             resizeMode="contain"
                         />
@@ -47,38 +51,39 @@ const FormField = ({
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        marginVertical: 10,
-    },
-    label: {
-        fontSize: 14,
-        color: "#c62828", // Red for label
-        fontWeight: "600",
-        marginBottom: 5,
-        paddingHorizontal: 24,
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        height: 60,
-        paddingHorizontal: 10,
-        backgroundColor: "#FFFFFF", // White background for contrast
-        borderRadius: 32,
-        borderColor: "#BBBBBB", // Light grey border
-        borderWidth: 1.5,
-    },
-    input: {
-        flex: 1,
-        fontSize: 12,
-        color: "#000000", // Black text color for readability
-        paddingHorizontal: 12,
-    },
-    icon: {
-        width: 24,
-        height: 24,
-        tintColor: "#888888", // Grey color for the icon
-    },
-});
+const makeStyles = (fontScale) =>
+    StyleSheet.create({
+        container: {
+            marginVertical: 10,
+        },
+        label: {
+            fontSize: 14 / fontScale,
+            color: "#c62828", // Red for label
+            fontWeight: "600",
+            marginBottom: 5,
+            paddingHorizontal: 24,
+        },
+        inputContainer: {
+            flexDirection: "row",
+            alignItems: "center",
+            height: 60,
+            paddingHorizontal: 10,
+            backgroundColor: "#FFFFFF", // White background for contrast
+            borderRadius: 32,
+            borderColor: "#BBBBBB", // Light grey border
+            borderWidth: 1.5,
+        },
+        input: {
+            flex: 1,
+            fontSize: 12 / fontScale,
+            color: "#000000", // Black text color for readability
+            paddingHorizontal: 12,
+        },
+        icon: {
+            width: 34,
+            height: 24,
+            tintColor: "#888888", // Grey color for the icon
+        },
+    });
 
 export default FormField;
