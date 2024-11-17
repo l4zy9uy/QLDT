@@ -24,7 +24,7 @@ const ForgotPassWord = ({ visible, onClose }) => {
         >
           <View style={styles.overlay}>
             <View style={styles.popupContainer}>
-                <Text style={styles.title}>Bạn hãy nhập Email (của trường) hoặc MSSV (đối với Sinh viên) để lấy lại mật khẩu. Mật khẩu mới sẽ được gửi về email của bạn.</Text>
+                <Text allowFontScaling style={styles.title}>Bạn hãy nhập Email (của trường) hoặc MSSV (đối với Sinh viên) để lấy lại mật khẩu. Mật khẩu mới sẽ được gửi về email của bạn.</Text>
                 <View style={styles.input}>
                     <Image 
                         source={icons.forgotPassIcon} 
