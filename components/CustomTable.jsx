@@ -2,6 +2,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import Checkbox from 'expo-checkbox';
+import {useGlobalContext} from "../context/GlobalProvider";
 
 const CustomTable = ({
                          data,
@@ -20,6 +21,9 @@ const CustomTable = ({
         headerText,
         cellText
     } = customStyles;
+
+    const { fontScale, width, height } = useGlobalContext();
+    const styles = makeStyles(fontScale, width, height);
 
     return (
         <ScrollView horizontal>
@@ -66,7 +70,7 @@ const CustomTable = ({
     );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (fontScale, width, height) => StyleSheet.create({
     tableHeader: {
         flexDirection: 'row',
         backgroundColor: '#b30000',

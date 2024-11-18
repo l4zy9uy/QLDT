@@ -3,6 +3,7 @@ import { View, StatusBar, Image, StyleSheet, Text, ScrollView } from "react-nati
 import TopBar from "../../components/TopBar";
 import CustomTable from "../../components/CustomTable";
 import { icons } from "../../constants";
+import {useGlobalContext} from "../../context/GlobalProvider";
 
 // Sample Data for Attendance
 const initialData = [
@@ -21,6 +22,9 @@ const initialData = [
 const AttendanceSheet = () => {
     const [data, setData] = useState(initialData);
     const [selectedRows, setSelectedRows] = useState({});
+
+    const { fontScale, width, height } = useGlobalContext();
+    const styles = makeStyles(fontScale, width, height);
 
     // Toggle checkbox selection
     const toggleRowSelection = (id) => {
@@ -78,7 +82,7 @@ const AttendanceSheet = () => {
     );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (fontScale, width, height)  => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#f0f0f0",
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
         height: 70,
     },
     title: {
-        fontSize: 18,
+        fontSize: 18 / fontScale,
         fontWeight: "bold",
         color: "#333",
         textAlign: "center",
