@@ -10,8 +10,8 @@ import {
     Image,
     Dimensions,
 } from "react-native";
-import { icons } from "../../constants"; // Your custom icons
-import Sidebar from "../../components/Sidebar"; // Refactored Sidebar
+import { icons } from "../../constants"; // Custom icons
+import Sidebar from "../../components/Sidebar"; // Sidebar component
 import Entypo from "@expo/vector-icons/Entypo";
 import TopBar from "../../components/TopBar"; // Custom TopBar
 import { useGlobalContext } from "../../context/GlobalProvider";
@@ -20,8 +20,8 @@ const ProfileScreen = () => {
     const SCREEN_WIDTH = Dimensions.get("window").width;
     const { fontScale, width, height } = useGlobalContext();
     const styles = makeStyles(fontScale, width, height);
-    const [isVisible, setIsVisible] = useState(false); // Sidebar visibility state
-    const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current; // Start off-screen (right)
+    const [isVisible, setIsVisible] = useState(false);
+    const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
 
     const toggleSidebar = () => {
         Animated.timing(slideAnim, {
@@ -36,13 +36,11 @@ const ProfileScreen = () => {
         PanResponder.create({
             onMoveShouldSetPanResponder: (evt, gestureState) =>
                 gestureState.dx > 20 && Math.abs(gestureState.dy) < 10,
-
             onPanResponderMove: (evt, gestureState) => {
                 if (gestureState.dx > 0) {
                     slideAnim.setValue(Math.min(gestureState.dx, SCREEN_WIDTH));
                 }
             },
-
             onPanResponderRelease: (evt, gestureState) => {
                 if (gestureState.dx > 100) {
                     Animated.timing(slideAnim, {
@@ -62,13 +60,14 @@ const ProfileScreen = () => {
     ).current;
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container} {...panResponder.panHandlers}>
             <StatusBar
                 backgroundColor="transparent"
                 translucent
                 barStyle="light-content"
             />
 
+            {/* Top Bar */}
             <TopBar
                 leftComponent={
                     <Image source={icons.BKLogo} style={styles.logo} resizeMode="contain" />
@@ -94,7 +93,7 @@ const ProfileScreen = () => {
                 </View>
             </View>
 
-            {/* Animated Sidebar */}
+            {/* Sidebar with Overlay */}
             <Sidebar
                 slideAnim={slideAnim}
                 panResponder={panResponder}
@@ -155,12 +154,6 @@ const makeStyles = (fontScale, width, height) =>
             borderBottomLeftRadius: 16,
             elevation: 8,
             zIndex: 5,
-        },
-        sidebarText: {
-            fontSize: 16 / fontScale,
-            fontWeight: "600",
-            color: "white",
-            marginBottom: 8,
         },
         iconButton: {
             marginHorizontal: width * 0.03,
