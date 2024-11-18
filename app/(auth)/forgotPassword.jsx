@@ -1,83 +1,106 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Modal, Image, Pressable, Alert } from 'react-native';
-import { icons } from "../../constants";
-import { useState } from 'react';
+import {
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    Modal,
+    Image,
+    Pressable,
+    Alert
+} from 'react-native';
+import {icons} from "../../constants";
+import {useState} from 'react';
+import {useGlobalContext} from "../../context/GlobalProvider";
 
-const ForgotPassWord = ({ visible, onClose }) => {
+const ForgotPassWord = ({visible, onClose}) => {
     const [input, setInput] = useState('');
 
     const handleResetPassword = () => {
         // Handle reset pass
         alert(input);
         onClose();
-      };
+    };
 
     const getDynamicStyles = (pressed) => ({
         backgroundColor: pressed ? 'grey' : 'white',
     });
 
+    const {fontScale, width, height} = useGlobalContext();
+    const styles = makeStyles(fontScale, width, height);
+
     return (
         <Modal
-          transparent={true}
-          visible={visible}
-          onRequestClose={onClose}
+            transparent={true}
+            visible={visible}
+            onRequestClose={onClose}
         >
-          <View style={styles.overlay}>
-            <View style={styles.popupContainer}>
-                <Text allowFontScaling style={styles.title}>Bạn hãy nhập Email (của trường) hoặc MSSV (đối với Sinh viên) để lấy lại mật khẩu. Mật khẩu mới sẽ được gửi về email của bạn.</Text>
-                <View style={styles.input}>
-                    <Image 
-                        source={icons.forgotPassIcon} 
-                        style={styles.forgotPassIcon}
-                    />
-                    <TextInput 
-                    placeholder="Email hoặc Mã số sinh viên"
-                    onChangeText={setInput}/>
-                </View>
+            <View style={styles.overlay}>
+                <View style={styles.popupContainer}>
+                    <Text allowFontScaling style={styles.title}>Bạn hãy nhập
+                        Email (của trường) hoặc MSSV (đối với Sinh viên) để lấy
+                        lại mật khẩu. Mật khẩu mới sẽ được gửi về email của
+                        bạn.</Text>
+                    <View style={styles.input}>
+                        <Image
+                            source={icons.forgotPassIcon}
+                            style={styles.forgotPassIcon}
+                        />
+                        <TextInput
+                            style={{
+                                fontSize: 12 / fontScale,
+                            }}
+                            placeholder="Email hoặc Mã số sinh viên"
+                            onChangeText={setInput}/>
+                    </View>
 
-              <View style={styles.buttonContainer}>
-                <Pressable onPress={onClose} 
-                    style={({ pressed }) => [
-                        styles.cancelButton,
-                        getDynamicStyles(pressed)]}
-                    >
-                    <Text style={{color:'red', textAlign:'center'}}>Hủy</Text>
-                </Pressable>
-                <Pressable onPress={handleResetPassword} 
-                    style={({ pressed }) => [
-                        styles.confirmButton,
-                        getDynamicStyles(pressed)]}
-                    >
-                    <Text style={{color:'purple', textAlign:'center'}}>Xác nhận</Text>
-                </Pressable>
-              </View>
+                    <View style={styles.buttonContainer}>
+                        <Pressable onPress={onClose}
+                                   style={({pressed}) => [
+                                       styles.cancelButton,
+                                       getDynamicStyles(pressed)]}
+                        >
+                            <Text style={{
+                                color: 'red',
+                                textAlign: 'center'
+                            }}>Hủy</Text>
+                        </Pressable>
+                        <Pressable onPress={handleResetPassword}
+                                   style={({pressed}) => [
+                                       styles.confirmButton,
+                                       getDynamicStyles(pressed)]}
+                        >
+                            <Text
+                                style={{color: 'purple', textAlign: 'center'}}>Xác
+                                nhận</Text>
+                        </Pressable>
+                    </View>
+                </View>
             </View>
-          </View>
         </Modal>
-      );
+    );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (fontScale, width, height) => StyleSheet.create({
     overlay: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', //làm mờ
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', //làm mờ
     },
     popupContainer: {
-      width: '80%',
-      padding: 20,
-      backgroundColor: 'white',
-      borderRadius: 20,
-      alignItems: 'center',
+        width: '80%',
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        alignItems: 'center',
     },
     title: {
-      fontSize: 18,
-      marginBottom: 10,
-      paddingBottom: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-      textAlign: 'center' //căn giữa text
+        fontSize: 14 / fontScale,
+        marginBottom: 10,
+        paddingBottom: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center' //căn giữa text
     },
     forgotPassIcon: {
         width: 30,
@@ -85,21 +108,21 @@ const styles = StyleSheet.create({
         bottom: 4
     },
     input: {
-      flexDirection:'row',
-      width: '100%',
-      padding: 10,
-      marginBottom: 10,
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 50,
+        flexDirection: 'row',
+        width: '100%',
+        padding: 10,
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 50,
     },
     buttonContainer: {
-      flexDirection:'row',
-      width: '100%',
-      borderTopWidth: 1,
-      borderTopColor: 'grey',
-      paddingTop: 10,
-      marginTop: 10
+        flexDirection: 'row',
+        width: '100%',
+        borderTopWidth: 1,
+        borderTopColor: 'grey',
+        paddingTop: 10,
+        marginTop: 10
     },
     cancelButton: {
         width: '50%',
