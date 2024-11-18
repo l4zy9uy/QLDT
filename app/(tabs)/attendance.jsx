@@ -1,93 +1,79 @@
-// AttendanceSheet.js
-import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    FlatList,
-    StyleSheet,
-    Image,
-    TouchableOpacity,
-    StatusBar,
-} from 'react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import React, { useState } from "react";
+import { View, StatusBar, Image, StyleSheet, Text, ScrollView } from "react-native";
 import TopBar from "../../components/TopBar";
+import CustomTable from "../../components/CustomTable";
 import { icons } from "../../constants";
 
 // Sample Data for Attendance
 const initialData = [
-    { id: '1', name: 'Anderson, Cooper', status: 'present' },
-    { id: '2', name: 'Barry, Holly', status: 'present' },
-    { id: '3', name: 'Branson, Tom', status: 'present' },
-    { id: '4', name: 'Brosnan, Pierce', status: 'absent' },
-    { id: '5', name: 'Clarkson, Kelly', status: 'present' },
-    { id: '6', name: 'Cooper, Bradly', status: 'present' },
-    { id: '7', name: 'Diaz, Cameron', status: 'absent' },
-    { id: '8', name: 'Eddison, Thomas', status: 'present' },
-    { id: '9', name: 'Flinn, William', status: 'present' },
-    { id: '10', name: 'Hyak, Salma', status: 'absent' },
+    { id: "1", name: "Anderson, Cooper", studentId: "S123" },
+    { id: "2", name: "Barry, Holly", studentId: "S124" },
+    { id: "3", name: "Branson, Tom", studentId: "S125" },
+    { id: "4", name: "Brosnan, Pierce", studentId: "S126" },
+    { id: "5", name: "Clarkson, Kelly", studentId: "S127" },
+    { id: "6", name: "Cooper, Bradly", studentId: "S128" },
+    { id: "7", name: "Diaz, Cameron", studentId: "S129" },
+    { id: "8", name: "Eddison, Thomas", studentId: "S130" },
+    { id: "9", name: "Flinn, William", studentId: "S131" },
+    { id: "10", name: "Hyak, Salma", studentId: "S132" },
 ];
 
 const AttendanceSheet = () => {
     const [data, setData] = useState(initialData);
+    const [selectedRows, setSelectedRows] = useState({});
 
-    // Toggle status between 'present' and 'absent'
-    const toggleStatus = (id) => {
-        const updatedData = data.map((item) =>
-            item.id === id
-                ? { ...item, status: item.status === 'present' ? 'absent' : 'present' }
-                : item
-        );
-        setData(updatedData);
+    // Toggle checkbox selection
+    const toggleRowSelection = (id) => {
+        setSelectedRows((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
     };
 
-    // Render each row of the attendance sheet
-    const renderItem = ({ item }) => (
-        <View style={styles.row}>
-            {/* Name Box */}
-            <View style={styles.nameBox}>
-                <Text style={styles.nameText}>{item.name}</Text>
-            </View>
+    // Table Headers
+    const headers = [
+        { label: "Order", field: "order" },
+        { label: "Name", field: "name" },
+        { label: "Student ID", field: "studentId" },
+    ];
 
-            {/* Status Box */}
-            <View style={styles.statusBox}>
-                <TouchableOpacity onPress={() => toggleStatus(item.id)}>
-                    {item.status === 'present' ? (
-                        <AntDesign name="checkcircle" size={24} color="green" />
-                    ) : (
-                        <AntDesign name="closecircle" size={24} color="red" />
-                    )}
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+    // Add Order Number to Data
+    const dataWithOrder = data.map((item, index) => ({
+        ...item,
+        order: index + 1, // Add order number starting from 1
+    }));
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor="transparent" translucent barStyle="light-content" />
+            <StatusBar
+                backgroundColor="transparent"
+                translucent
+                barStyle="light-content"
+            />
 
+            {/* TopBar with eHUST Logo */}
             <TopBar
                 centerComponent={
                     <Image source={icons.whiteLogo} style={styles.eHustLogo} resizeMode="contain" />
                 }
             />
 
-            {/* Header Row */}
-            <View style={styles.header}>
-                <View style={styles.nameBox}>
-                    <Text style={styles.headerText}>Name</Text>
-                </View>
-                <View style={styles.statusBox}>
-                    <Text style={styles.headerText}>Status</Text>
-                </View>
-            </View>
+            {/* Attendance Title */}
+            <Text style={styles.title}>Attendance for: {new Date().toLocaleDateString()}</Text>
 
-            {/* Attendance List */}
-            <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                style={styles.list}
-            />
+            {/* Scrollable Table */}
+            <ScrollView horizontal>
+                <View style={styles.tableContainer}>
+                    <CustomTable
+                        data={dataWithOrder}
+                        headers={headers}
+                        hasSelected={true}
+                        selectedRows={selectedRows}
+                        onToggleRow={toggleRowSelection}
+                        customStyles={styles.tableStyles}
+                    />
+                </View>
+            </ScrollView>
         </View>
     );
 };
@@ -95,55 +81,40 @@ const AttendanceSheet = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgba(0, 255, 0, 0.3)', // Light green background for debugging
-        borderColor: 'red', // Red border for visibility
-        borderWidth: 2,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        backgroundColor: '#f0f0f0',
-        borderColor: 'red', // Red border for visibility
-        borderWidth: 2,
-    },
-    headerText: {
-        fontWeight: 'bold',
-        fontSize: 16,
-    },
-    list: {
-        marginTop: 10,
-    },
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginVertical: 5,
-        paddingVertical: 15,
-        paddingHorizontal: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-    },
-    nameBox: {
-        flex: 2, // Take up more space for the name
-        padding: 10,
-        justifyContent: 'center',
-    },
-    statusBox: {
-        flex: 1, // Smaller box for the status icon
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    nameText: {
-        fontSize: 16,
-        color: '#333',
+        backgroundColor: "#f0f0f0",
+        paddingHorizontal: 16,
     },
     eHustLogo: {
         width: 70,
         height: 70,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#333",
+        textAlign: "center",
+        marginVertical: 10,
+    },
+    tableContainer: {
+        flex: 1,
+        alignItems: "center", // Center the table horizontally
+        paddingVertical: 10,
+    },
+    tableStyles: {
+        tableHeader: {
+            backgroundColor: "#b30000", // Primary red for header
+        },
+        headerText: {
+            color: "white",
+            fontWeight: "bold",
+        },
+        cellText: {
+            color: "#333",
+            textAlign: "center", // Center align text inside the cells
+        },
+        checkbox: {
+            marginHorizontal: 20,
+        },
     },
 });
 
