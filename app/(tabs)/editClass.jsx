@@ -1,5 +1,4 @@
-// EditClassScreen.js
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
     View,
     Text,
@@ -7,29 +6,79 @@ import {
     TouchableOpacity,
     StyleSheet,
     ScrollView,
-} from 'react-native';
-import TopBar from '../../components/TopBar'; // Reuse the TopBar component
-import { Picker } from '@react-native-picker/picker'; // Dropdown picker
-import { Ionicons } from '@expo/vector-icons'; // Icons for the back button
+    Alert,
+} from "react-native";
+import TopBar from "../../components/TopBar";
+import { Picker } from "@react-native-picker/picker";
+import { Ionicons } from "@expo/vector-icons";
+import axiosClient from "../../axiosClient";
+
+const editClass = async (token, classId, updates) => {
+    try {
+        const response = await axiosClient.put(`/class/edit/`, classId, {
+            token,
+            class_id: classId,
+            ...updates, // Truyền các thông tin cần chỉnh sửa
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error editing class:", error.response?.data || error.message);
+        throw error;
+    }
+};
+
+const deleteClass = async (token, classId) => {
+    try {
+        const response = await axiosClient.post("/class/delete/", classId, {
+
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting class:", error.response?.data || error.message);
+        throw error;
+    }
+};
 
 const EditClassScreen = () => {
-    const [classCode, setClassCode] = useState('745208');
-    const [className, setClassName] = useState('Taekwondo 1');
-    const [courseCode, setCourseCode] = useState('PE2251');
-    const [classType, setClassType] = useState('LT+BT');
-    const [startWeek, setStartWeek] = useState('Tuần 1');
-    const [endWeek, setEndWeek] = useState('Tuần 14');
-    const [credits, setCredits] = useState('50');
+    const [classId, setClassId] = useState("12345"); // ID lớp cần chỉnh sửa
+    const [className, setClassName] = useState("Taekwondo 1");
+    const [startDate, setStartDate] = useState("2025-01-15");
+    const [endDate, setEndDate] = useState("2025-06-15");
+    const [status, setStatus] = useState("Active");
 
-    const handleRemoveClass = () => alert('Class removed!');
-    const handleConfirm = () => alert('Class confirmed!');
+    // Token giả lập (thay thế bằng token thực tế)
+    const token = "your_token_here";
+
+    const handleEditClass = async () => {
+        try {
+            const updates = {
+                class_name: className,
+                start_date: startDate,
+                end_date: endDate,
+                status: status,
+            };
+            const response = await editClass(token, classId, updates);
+            Alert.alert("Thành công", "Thông tin lớp học đã được cập nhật.");
+        } catch (error) {
+            Alert.alert("Lỗi", "Không thể cập nhật lớp học.");
+        }
+    };
+
+    const handleDeleteClass = async () => {
+        try {
+            const response = await deleteClass(token, classId);
+            Alert.alert("Thành công", "Lớp học đã được xóa.");
+        } catch (error) {
+            Alert.alert("Lỗi", "Không thể xóa lớp học.");
+        }
+    };
 
     return (
         <View style={styles.container}>
             {/* Top Bar */}
             <TopBar
                 leftComponent={
-                    <TouchableOpacity onPress={() => alert('Back Pressed')}>
+                    <TouchableOpacity onPress={() => alert("Back Pressed")}>
                         <Ionicons name="arrow-back-outline" size={24} color="white" />
                     </TouchableOpacity>
                 }
@@ -37,85 +86,51 @@ const EditClassScreen = () => {
             />
 
             <ScrollView contentContainerStyle={styles.formContainer}>
-                {/* Class Code Input */}
-                <TextInput
-                    style={styles.input}
-                    value={classCode}
-                    onChangeText={setClassCode}
-                />
-
                 {/* Class Name Input */}
                 <TextInput
                     style={styles.input}
+                    placeholder="Tên lớp học"
                     value={className}
                     onChangeText={setClassName}
                 />
 
-                {/* Course Code Input */}
+                {/* Start Date Input */}
                 <TextInput
                     style={styles.input}
-                    value={courseCode}
-                    onChangeText={setCourseCode}
+                    placeholder="Ngày bắt đầu (YYYY-MM-DD)"
+                    value={startDate}
+                    onChangeText={setStartDate}
                 />
 
-                {/* Class Type Dropdown */}
+                {/* End Date Input */}
+                <TextInput
+                    style={styles.input}
+                    placeholder="Ngày kết thúc (YYYY-MM-DD)"
+                    value={endDate}
+                    onChangeText={setEndDate}
+                />
+
+                {/* Status Dropdown */}
                 <View style={styles.dropdown}>
                     <Picker
-                        selectedValue={classType}
-                        onValueChange={(itemValue) => setClassType(itemValue)}
+                        selectedValue={status}
+                        onValueChange={(itemValue) => setStatus(itemValue)}
                     >
-                        <Picker.Item label="LT+BT" value="LT+BT" />
-                        <Picker.Item label="LT" value="LT" />
-                        <Picker.Item label="BT" value="BT" />
+                        <Picker.Item label="Active" value="Active" />
+                        <Picker.Item label="Upcoming" value="Upcoming" />
+                        <Picker.Item label="Completed" value="Completed" />
                     </Picker>
                 </View>
 
-                {/* Start and End Week Dropdowns */}
+                {/* Buttons */}
                 <View style={styles.row}>
-                    <View style={styles.dropdown}>
-                        <Picker
-                            selectedValue={startWeek}
-                            onValueChange={(itemValue) => setStartWeek(itemValue)}
-                        >
-                            <Picker.Item label="Tuần 1" value="Tuần 1" />
-                            <Picker.Item label="Tuần 2" value="Tuần 2" />
-                            <Picker.Item label="Tuần 3" value="Tuần 3" />
-                        </Picker>
-                    </View>
-                    <View style={styles.dropdown}>
-                        <Picker
-                            selectedValue={endWeek}
-                            onValueChange={(itemValue) => setEndWeek(itemValue)}
-                        >
-                            <Picker.Item label="Tuần 14" value="Tuần 14" />
-                            <Picker.Item label="Tuần 13" value="Tuần 13" />
-                            <Picker.Item label="Tuần 12" value="Tuần 12" />
-                        </Picker>
-                    </View>
-                </View>
-
-                {/* Credits Input */}
-                <TextInput
-                    style={styles.input}
-                    value={credits}
-                    onChangeText={setCredits}
-                    keyboardType="numeric"
-                />
-
-                {/* Buttons Row */}
-                <View style={styles.row}>
-                    <TouchableOpacity style={styles.removeButton} onPress={handleRemoveClass}>
+                    <TouchableOpacity style={styles.removeButton} onPress={handleDeleteClass}>
                         <Text style={styles.buttonText}>Xóa lớp học</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
+                    <TouchableOpacity style={styles.confirmButton} onPress={handleEditClass}>
                         <Text style={styles.buttonText}>Xác nhận</Text>
                     </TouchableOpacity>
                 </View>
-
-                {/* Footer Link */}
-                <TouchableOpacity>
-                    <Text style={styles.footerLink}>Thông tin danh sách các lớp mở</Text>
-                </TouchableOpacity>
             </ScrollView>
         </View>
     );
@@ -124,59 +139,52 @@ const EditClassScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: "#f0f0f0",
     },
     headerText: {
         fontSize: 18,
-        fontWeight: 'bold',
-        color: 'white',
+        fontWeight: "bold",
+        color: "white",
     },
     formContainer: {
         padding: 16,
     },
     input: {
         borderWidth: 1,
-        borderColor: '#b30000',
+        borderColor: "#b30000",
         padding: 10,
         marginBottom: 12,
         borderRadius: 4,
     },
     dropdown: {
-        flex: 1,
         borderWidth: 1,
-        borderColor: '#b30000',
+        borderColor: "#b30000",
         borderRadius: 4,
-        marginRight: 8,
+        marginBottom: 12,
     },
     row: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
         marginBottom: 12,
     },
     removeButton: {
         flex: 1,
-        backgroundColor: '#b30000',
+        backgroundColor: "#b30000",
         paddingVertical: 12,
         marginRight: 8,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 4,
     },
     confirmButton: {
         flex: 1,
-        backgroundColor: '#b30000',
+        backgroundColor: "#b30000",
         paddingVertical: 12,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 4,
     },
     buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-    footerLink: {
-        color: '#b30000',
-        textAlign: 'center',
-        marginTop: 16,
-        textDecorationLine: 'underline',
+        color: "white",
+        fontWeight: "bold",
     },
 });
 

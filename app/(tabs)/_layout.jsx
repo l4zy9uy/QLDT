@@ -8,6 +8,7 @@ import * as Font from 'expo-font';
 import {MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
 import {StyleSheet} from 'react-native'
 import AntDesign from "@expo/vector-icons/AntDesign";
+import OpenClassesScreen from "./openClasses";
 const DrawerLayout = () => {
     const [fontsLoaded, setFontsLoaded] = useState(false); // Track font loading
 
@@ -38,6 +39,8 @@ const DrawerLayout = () => {
                 <Tabs.Screen name="assignmentDetail" options={{title: 'AssigmentDetail', headerShown: false}} />
                 <Tabs.Screen name="attendance" options={{title: 'AttendanceDetail', headerShown: false}} />
                 <Tabs.Screen name="notification" options={{title: 'Notification', headerShown: false}} />
+                <Tabs.Screen name="openClasses" options={{title: 'openClasses', headerShown: false}} />
+                <Tabs.Screen name="manageClass" options={{title: 'manageClass', headerShown: false}} />
             </Tabs>
         );
     }

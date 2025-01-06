@@ -17,6 +17,8 @@ import { getCurrentUser, signIn } from "../../libs/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { icons } from "../../constants";
 import ForgotPassWord from "./forgotPassword";
+import axiosClient from "../../axiosClient"; // Đường dẫn tới file axiosClient.js
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 
 const SignIn = () => {
     const { fontScale, width, height } = useGlobalContext();
@@ -38,15 +40,29 @@ const SignIn = () => {
         setSubmitting(true);
 
         try {
-            await signIn(form.email, form.password);
-            const result = await getCurrentUser();
-            setUser(result);
-            setIsLogged(true);
+            // API call to sign in
+            const requestBody = {
+                email: form.email,
+                password: form.password,
+            };
 
+            const response = await axiosClient.post('/auth/login', requestBody); // Replace with your login endpoint
+            console.log(response);
+            // Save token to AsyncStorage
+            const token = response.account.token; // Assuming the token is inside the "account" object
+            console.log("token: ", token);
+            await AsyncStorage.setItem("authToken", token);
+            await AsyncStorage.setItem("role", response.account.role);
+            await AsyncStorage.setItem("authToken", response.account.id);
+
+            // Save user data to context or state
+            //setUser(result.account);
+            setIsLogged(true);
+            console.log("done");
             Alert.alert("Success", "User signed in successfully");
-            router.replace("/home");
+            router.replace("/home"); // Redirect to home page
         } catch (error) {
-            Alert.alert("Error", error.message);
+            Alert.alert("Error", error.response?.data?.message || "Failed to sign in");
         } finally {
             setSubmitting(false);
         }

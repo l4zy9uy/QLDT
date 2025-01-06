@@ -1,5 +1,4 @@
-// RegisterForClassScreen.js
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -7,16 +6,15 @@ import {
     TouchableOpacity,
     StyleSheet,
     ScrollView,
-    Alert
+    Alert,
 } from 'react-native';
 import TopBar from '../../components/TopBar';
-import {Ionicons} from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import CustomTable from '../../components/CustomTable';
-import {useNavigation} from "expo-router"; // Import ClassTable component
-import {router} from "expo-router";
+import { router } from 'expo-router';
 
-const RegisterForClassScreen = () => {
+const ManageClassesScreen = () => {
     const [classCode, setClassCode] = useState('');
     const [selectedClasses, setSelectedClasses] = useState({});
 
@@ -42,17 +40,6 @@ const RegisterForClassScreen = () => {
             end_date: '2025-06-15',
             status: 'Upcoming',
         },
-        {
-            id: '3',
-            class_id: 'PH103',
-            class_name: 'Physics Fundamentals',
-            lecturer_name: 'Dr. Green',
-            student_count: 40,
-            start_date: '2025-01-15',
-            end_date: '2025-05-30',
-            status: 'Completed',
-        },
-        // Thêm lớp khác nếu cần
     ]);
 
     // Cập nhật tiêu đề bảng để phù hợp với cấu trúc mới
@@ -66,80 +53,59 @@ const RegisterForClassScreen = () => {
         { label: 'Trạng Thái', field: 'status' },
     ];
 
-    const handleRegister = () => {
+    const handleCreateClass = () => {
         if (classCode) {
             Toast.show({
                 type: 'success',
-                text1: 'Registration Successful',
-                text2: `You have registered for: ${classCode}`,
+                text1: 'Class Created',
+                text2: `You have created the class: ${classCode}`,
             });
         } else {
             Toast.show({
                 type: 'error',
-                text1: 'Registration Failed',
+                text1: 'Creation Failed',
                 text2: 'Please enter a valid class code',
             });
         }
     };
 
-    const handleRemoveClass = () => {
-        const selectedClassIds = Object.keys(selectedClasses).filter(
-            (id) => selectedClasses[id]
-        );
+    const handleEditClass = () => {
+        const selectedClassIds = Object.keys(selectedClasses).filter((id) => selectedClasses[id]);
         if (selectedClassIds.length === 0) {
             Toast.show({
                 type: 'error',
-                text1: 'Remove Failed',
-                text2: 'Please select at least one class to remove.',
+                text1: 'Edit Failed',
+                text2: 'Please select at least one class to edit.',
             });
             return;
         }
 
-        Alert.alert('Confirm Remove', 'Are you sure you want to remove the selected classes?', [
-            { text: 'No', style: 'cancel' },
-            {
-                text: 'Yes',
-                onPress: () => {
-                    const updatedClassDetails = classDetails.filter(
-                        (item) => !selectedClasses[item.id]
-                    );
-                    setClassDetails(updatedClassDetails);
-                    setSelectedClasses({});
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Classes Removed',
-                        text2: 'Selected classes have been successfully removed.',
-                    });
-                },
-            },
-        ]);
+        // Navigate to an edit screen (replace with your actual edit flow)
+        router.push(`/editClass/${selectedClassIds[0]}`); // Chuyển tới màn hình chỉnh sửa lớp học
     };
 
     const toggleSelection = (id) => {
         setSelectedClasses((prevState) => ({ ...prevState, [id]: !prevState[id] }));
     };
 
-    const navigation = useNavigation();
-
     return (
         <View style={styles.container}>
             <TopBar
                 leftComponent={<Ionicons name="arrow-back-outline" size={24} color="white" />}
-                centerComponent={<Text style={styles.headerText}>REGISTER FOR CLASS</Text>}
+                centerComponent={<Text style={styles.headerText}>MANAGE CLASSES</Text>}
                 rightComponent={<View />}
-                onLeftPress={() => navigation.goBack()}
             />
 
             <ScrollView contentContainerStyle={styles.formContainer}>
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.inputWithButton}
-                        placeholder="Mã lớp"
+                        placeholder="Mã lớp mới"
                         value={classCode}
                         onChangeText={setClassCode}
                     />
-                    <TouchableOpacity style={styles.registerButtonInside} onPress={handleRegister}>
-                        <Text style={styles.buttonText}>Đăng ký</Text>
+                    <TouchableOpacity style={styles.registerButtonInside} onPress={handleCreateClass}>
+                        <Text style={styles.buttonText}>Tạo lớp học</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -162,16 +128,16 @@ const RegisterForClassScreen = () => {
                 />
 
                 <View style={styles.row}>
-                    <TouchableOpacity style={styles.submitButton}>
-                        <Text style={styles.buttonText}>Gửi đăng ký</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.removeButton} onPress={handleRemoveClass}>
-                        <Text style={styles.buttonText}>Xóa lớp đã chọn</Text>
+                    <TouchableOpacity style={styles.editButton} onPress={handleEditClass}>
+                        <Text style={styles.buttonText}>Chỉnh sửa lớp học</Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.footerLinkContainer} onPress={() => router.push("/openClasses")}>
-                    <Text style={styles.footerLink}>Thông tin danh sách các lớp
-                        mở</Text>
+
+                <TouchableOpacity
+                    style={styles.footerLinkContainer}
+                    onPress={() => router.push('/openClasses')}
+                >
+                    <Text style={styles.footerLink}>Thông tin danh sách các lớp mở</Text>
                 </TouchableOpacity>
             </ScrollView>
 
@@ -183,23 +149,23 @@ const RegisterForClassScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f0f0f0'
+        backgroundColor: '#f0f0f0',
     },
     headerText: {
         fontSize: 12,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
     },
     formContainer: {
-        padding: 16
+        padding: 16,
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 12
+        marginBottom: 12,
     },
-    inputContainer: {position: 'relative', width: '100%', marginBottom: 16},
+    inputContainer: { position: 'relative', width: '100%', marginBottom: 16 },
     inputWithButton: {
         width: '100%',
         height: 45,
@@ -222,54 +188,45 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#b30000',
         borderTopLeftRadius: 8,
-        borderTopRightRadius: 8
+        borderTopRightRadius: 8,
     },
     headerBox: {
         width: 100,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 10
+        paddingVertical: 10,
     },
     selectHeaderBox: {
         width: 100,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 10
+        paddingVertical: 10,
     },
     tableRow: {
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderColor: '#ddd',
         paddingVertical: 10,
-        alignItems: 'center'
+        alignItems: 'center',
     },
-    cellBox: {width: 100, justifyContent: 'center', alignItems: 'center'},
+    cellBox: { width: 100, justifyContent: 'center', alignItems: 'center' },
     checkboxContainer: {
         width: 100,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
-    cell: {textAlign: 'center', color: '#333'},
-    submitButton: {
-        flex: 1,
-        backgroundColor: '#b30000',
-        paddingVertical: 10,
-        marginRight: 8,
-        marginTop: 36,
-        alignItems: 'center',
-        borderRadius: 24
-    },
-    removeButton: {
+    cell: { textAlign: 'center', color: '#333' },
+    editButton: {
         flex: 1,
         backgroundColor: '#b30000',
         paddingVertical: 10,
         marginTop: 36,
         alignItems: 'center',
-        borderRadius: 24
+        borderRadius: 24,
     },
-    footerLinkContainer: {alignItems: 'center', marginTop: 16},
-    footerLink: {color: '#b30000', textDecorationLine: 'underline'},
-    buttonText: {color: 'white', fontWeight: 'bold', textAlign: 'center'},
+    footerLinkContainer: { alignItems: 'center', marginTop: 16 },
+    footerLink: { color: '#b30000', textDecorationLine: 'underline' },
+    buttonText: { color: 'white', fontWeight: 'bold', textAlign: 'center' },
 });
 
-export default RegisterForClassScreen;
+export default ManageClassesScreen;

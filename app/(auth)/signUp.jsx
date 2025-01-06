@@ -16,6 +16,9 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 import { createUser } from "../../libs/appwrite";
 import { icons } from "../../constants";
 import DropdownField from "../../components/DropdownField";
+import axiosClient from "../../axiosClient"; // Đường dẫn tới file axiosClient.js
+
+
 
 const SignUp = () => {
     const { fontScale, width, height } = useWindowDimensions();
@@ -30,9 +33,34 @@ const SignUp = () => {
     });
     const [role, setRole] = useState(null);
 
+    // const submit = async () => {
+    //     // Validation: Ensure all fields are filled and passwords match
+    //     if (!form.username || !form.email || !form.password || !form.confirmPassword || !role) {
+    //         Alert.alert("Error", "Please fill in all fields");
+    //         return;
+    //     }
+    //
+    //     if (form.password !== form.confirmPassword) {
+    //         Alert.alert("Error", "Passwords do not match");
+    //         return;
+    //     }
+    //
+    //     setSubmitting(true);
+    //     try {
+    //         const result = await createUser(form.email, form.password, form.username);
+    //         setUser(result);
+    //         setIsLogged(true);
+    //         router.replace("/home");
+    //     } catch (error) {
+    //         Alert.alert("Error", error.message);
+    //     } finally {
+    //         setSubmitting(false);
+    //     }
+    // };
+
     const submit = async () => {
         // Validation: Ensure all fields are filled and passwords match
-        if (!form.username || !form.email || !form.password || !form.confirmPassword || !role) {
+        if (!form.ho || !form.ten || !form.email || !form.password || !form.confirmPassword || !role) {
             Alert.alert("Error", "Please fill in all fields");
             return;
         }
@@ -44,20 +72,31 @@ const SignUp = () => {
 
         setSubmitting(true);
         try {
-            const result = await createUser(form.email, form.password, form.username);
-            setUser(result);
-            setIsLogged(true);
-            router.replace("/home");
+            const requestBody = {
+                ho: form.ho,
+                ten: form.ten,
+                email: form.email,
+                password: form.password,
+                role: role,
+            };
+            console.log(requestBody)
+            // Gửi request tới API
+            const result = await axiosClient.post('/auth/signup', requestBody);
+            console.log(result);
+            // Giả sử response trả về user, bạn có thể cập nhật state:
+            setUser(result); // Lưu thông tin user vào context hoặc state
+            setIsLogged(true); // Đánh dấu người dùng đã đăng nhập
+            router.replace("/home"); // Điều hướng về trang home
         } catch (error) {
-            Alert.alert("Error", error.message);
+            Alert.alert("Error", error.response?.data?.message || error.message);
         } finally {
             setSubmitting(false);
         }
     };
 
     const roleOptions = [
-        { label: "Student", value: "STUDENT" },
-        { label: "Lecturer", value: "LECTURER" },
+        { label: "Student", value: "student" },
+        { label: "Lecturer", value: "teacher" },
     ];
 
     return (
